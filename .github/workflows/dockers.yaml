@@ -27,13 +27,21 @@ jobs:
           password: ${{ secrets.ACR_TOKEN }}
       - name: Generate App Version
         run: echo "DATE=$(date +'%Y%m%d')" >> $GITHUB_ENV
-      - name: Build and push
-        uses: docker/build-push-action@v3
+      - name: Build basic version
+        uses: docker/build-push-action@v4
         with:
           push: true
-          build-args: |
-            APP_NAME=${{ env.APP_NAME }}
-            APP_VERSION=${{ env.DATE }}
+          context: ./basic/.
+          platforms: linux/amd64,linux/arm64
           tags: |
             registry.cn-shanghai.aliyuncs.com/xm798/caddy:latest
-            registry.cn-shanghai.aliyuncs.com/xm798/caddy:${{ env.DATE }}
+            registry.cn-shanghai.aliyuncs.com/xm798/caddy:basic-${{ env.DATE }}
+      - name: Build extended version
+        uses: docker/build-push-action@v4
+        with:
+          push: true
+          context: ./extended/.
+          platforms: linux/amd64,linux/arm64
+          tags: |
+            registry.cn-shanghai.aliyuncs.com/xm798/caddy:extended
+            registry.cn-shanghai.aliyuncs.com/xm798/caddy:extended-${{ env.DATE }}
