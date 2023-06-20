@@ -1,7 +1,7 @@
 FROM caddy:builder AS builder
 
 RUN xcaddy build \
-    --with github.com/caddyserver/certmagic \
+    # --with github.com/caddyserver/certmagic \
     --with github.com/caddy-dns/cloudflare \
     --with github.com/caddy-dns/dnspod \
     --with github.com/caddy-dns/alidns \
