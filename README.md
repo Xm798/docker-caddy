@@ -115,7 +115,19 @@ Use `import rp_ipwl 10.0.0.8:1234` to reverse proxy a site that only allows acce
 ### Create Network
 
 ```bash
-docker network create  -d bridge --internal caddy_default
+docker network create  -d bridge caddy_default
+```
+
+### Create Mount Directories
+
+```bash
+mkdir data config log srv
+```
+
+If a user is specified in the compose file, you need to adjust the permissions accordingly:
+
+```bash
+sudo chown -R 1000:1000 .
 ```
 
 ### Start

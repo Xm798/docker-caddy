@@ -113,7 +113,19 @@ import log app_name
 ### 创建网络
 
 ```bash
-docker network create  -d bridge --internal caddy_default
+docker network create  -d bridge caddy_default
+```
+
+### 创建挂载目录
+
+```bash
+mkdir data config log srv
+```
+
+如果在 compose file 中指定用户了，需要对应修改权限：
+
+```bash
+sudo chown -R 1000:1000 .
 ```
 
 ### 启动
