@@ -1,0 +1,7 @@
+config/
+data/
+log/
+srv/
+
+Caddyfiles/*
+!Caddyfiles/Caddyfile

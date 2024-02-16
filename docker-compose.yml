@@ -1,0 +1,28 @@
+version: "3.7"
+
+services:
+  caddy:
+    container_name: caddy
+    image: xm798/caddy:latest
+    # image: registry.cn-shanghai.aliyuncs.com/xm798/caddy:latest
+    # user: 1000:1000
+    dns:
+      - 8.8.8.8
+      - 1.1.1.1
+      - 1.0.0.1
+      - 223.5.5.5
+      - 119.29.29.29
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./Caddyfiles:/etc/caddy
+      - ./data:/data
+      - ./config:/config
+      - ./log:/log
+      - ./srv:/srv
+    restart: always
+
+networks:
+  caddy_default:
+    external: true

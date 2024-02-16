@@ -1,0 +1,31 @@
+{
+	http_port 80
+	https_port 443
+	# email YOUR_EMAIL
+	# acme_dns cloudflare "YOUR_CLOUDFLARE_TOKEN"
+}
+
+(log) {
+	log {
+		output file /log/{args[0]}/access.log {
+			roll_size 50MiB
+			roll_local_time
+			roll_keep 10
+			roll_keep_for 2160h
+		}
+	}
+}
+
+(rp_ipwl) {
+	@ip_whitelist {
+		remote_ip 10.0.0.0/8 172.16.0.0/12
+	}
+
+	route @ip_whitelist {
+		reverse_proxy {args[0]}
+	}
+
+	respond 403
+}
+
+import *.Caddyfile
