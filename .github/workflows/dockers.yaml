@@ -2,7 +2,7 @@ name: Build Docker Image
 
 on:
   schedule:
-    - cron: '0 0 * * 1'
+    - cron: '0 3 */5 * *'
   workflow_dispatch:
 
 env:
@@ -42,7 +42,7 @@ jobs:
         run: |
           echo "GITHUB_USER=${GITHUB_REPOSITORY,,}" >> $GITHUB_ENV
       - name: Build and push
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v6
         env:
           DOCKERHUB_USER: ${{ secrets.DOCKERHUB_USER }}
           ACR_NAMESPACE: ${{ secrets.ACR_NAMESPACE }}
@@ -51,7 +51,7 @@ jobs:
           context: .
           platforms: |
             linux/amd64
-            linux/arm64/v8
+            linux/arm64
           tags: |
             ${{ env.DOCKERHUB_USER }}/${{ env.APP_NAME }}:latest
             ${{ env.DOCKERHUB_USER }}/${{ env.APP_NAME }}:${{ env.APP_VERSION }}
@@ -59,3 +59,22 @@ jobs:
             ghcr.io/${{ env.GITHUB_USER }}/${{ env.APP_NAME }}:${{ env.APP_VERSION }}
             registry.cn-shanghai.aliyuncs.com/${{ env.ACR_NAMESPACE }}/${{ env.APP_NAME }}:latest
             registry.cn-shanghai.aliyuncs.com/${{ env.ACR_NAMESPACE }}/${{ env.APP_NAME }}:${{ env.APP_VERSION }}
+      - name: Build and push plus version
+        uses: docker/build-push-action@v6
+        env:
+          DOCKERHUB_USER: ${{ secrets.DOCKERHUB_USER }}
+          ACR_NAMESPACE: ${{ secrets.ACR_NAMESPACE }}
+        with:
+          push: true
+          context: .
+          file: ./Dockerfile.plus
+          platforms: |
+            linux/amd64
+            linux/arm64
+          tags: |
+            ${{ env.DOCKERHUB_USER }}/${{ env.APP_NAME }}:plus
+            ${{ env.DOCKERHUB_USER }}/${{ env.APP_NAME }}:plus-${{ env.APP_VERSION }}
+            ghcr.io/${{ env.GITHUB_USER }}/${{ env.APP_NAME }}:plus
+            ghcr.io/${{ env.GITHUB_USER }}/${{ env.APP_NAME }}:plus-${{ env.APP_VERSION }}
+            registry.cn-shanghai.aliyuncs.com/${{ env.ACR_NAMESPACE }}/${{ env.APP_NAME }}:plus
+            registry.cn-shanghai.aliyuncs.com/${{ env.ACR_NAMESPACE }}/${{ env.APP_NAME }}:plus-${{ env.APP_VERSION }}

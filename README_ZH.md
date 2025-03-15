@@ -8,6 +8,15 @@
 - caddy-dns/dnspod
 - caddy-dns/alidns
 
+### Plus 版本
+
+同时提供了一个 Plus 版的镜像，其中包含以下附加模块：
+
+- caddyserver/replace-response
+- mholt/caddy-dynamicdns
+
+如果需要这些模块，可以使用带有标签 `plus` 的镜像，例如 `xm798/caddy:plus`。
+
 ## 配置
 
 ### 克隆本仓库

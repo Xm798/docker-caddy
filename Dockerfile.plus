@@ -4,7 +4,10 @@ RUN xcaddy build \
     --with github.com/caddy-dns/cloudflare \
     --with github.com/caddy-dns/dnspod \
     --with github.com/caddy-dns/alidns \
-    --with github.com/caddy-dns/tencentcloud
+    --with github.com/caddy-dns/tencentcloud \
+    # Extended plugins
+    --with github.com/mholt/caddy-dynamicdns \
+    --with github.com/caddyserver/replace-response
 
 FROM caddy:latest
 

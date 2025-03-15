@@ -9,6 +9,16 @@ An out-of-the-box template for running Caddy with Docker.
 - caddy-dns/cloudflare
 - caddy-dns/dnspod
 - caddy-dns/alidns
+- caddy-dns/tencentcloud
+
+### Plus version
+
+There is also a plus version of the image, which includes the following additional modules:
+
+- caddyserver/replace-response
+- mholt/caddy-dynamicdns
+
+If you need these modules, you can use the image with the tag `plus`, for example `xm798/caddy:plus`.
 
 ## Configuration
 
