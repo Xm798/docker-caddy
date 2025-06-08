@@ -5,8 +5,11 @@
 ## 包含模块
 
 - caddy-dns/cloudflare
-- caddy-dns/dnspod
+- ~~caddy-dns/dnspod~~
 - caddy-dns/alidns
+- caddy-dns/tencentcloud
+
+**注意**：从Caddy 2.10版本开始，libdns已升级到稳定的1.0版本，其中包含许多破坏性API更改。[libdns/dnspod](https://github.com/libdns/dnspod)尚未适应此更新，导致最新构建不再包含`caddy-dns/dnspod`模块，直到libdns/dnspod解决这个问题。在此期间，您可以使用`caddy-dns/tencentcloud`作为替代方案。
 
 ### Plus 版本
 

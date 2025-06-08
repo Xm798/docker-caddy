@@ -7,9 +7,11 @@ An out-of-the-box template for running Caddy with Docker.
 ## Included Modules
 
 - caddy-dns/cloudflare
-- caddy-dns/dnspod
+- ~~caddy-dns/dnspod~~
 - caddy-dns/alidns
 - caddy-dns/tencentcloud
+
+> **Note**: Starting from Caddy 2.10, libdns has graduated to a stable 1.0 version which includes many breaking API changes. The [libdns/dnspod](https://github.com/libdns/dnspod) has not yet adapted to this update, causing the latest builds to no longer include the `caddy-dns/dnspod` module until libdns/dnspod resolves this issue. In the meantime, you can use `caddy-dns/tencentcloud` as an alternative.
 
 ### Plus version
 

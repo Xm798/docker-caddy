@@ -2,7 +2,7 @@ FROM caddy:builder AS builder
 
 RUN xcaddy build \
     --with github.com/caddy-dns/cloudflare \
-    --with github.com/caddy-dns/dnspod \
+    # --with github.com/caddy-dns/dnspod \
     --with github.com/caddy-dns/alidns \
     --with github.com/caddy-dns/tencentcloud
 
