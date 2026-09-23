@@ -45,7 +45,6 @@ jobs:
         uses: docker/build-push-action@v6
         env:
           DOCKERHUB_USER: ${{ secrets.DOCKERHUB_USER }}
-          ACR_NAMESPACE: ${{ secrets.ACR_NAMESPACE }}
         with:
           push: true
           context: .
@@ -57,13 +56,10 @@ jobs:
             ${{ env.DOCKERHUB_USER }}/${{ env.APP_NAME }}:${{ env.APP_VERSION }}
             ghcr.io/${{ env.GITHUB_USER }}/${{ env.APP_NAME }}:latest
             ghcr.io/${{ env.GITHUB_USER }}/${{ env.APP_NAME }}:${{ env.APP_VERSION }}
-            registry.cn-shanghai.aliyuncs.com/${{ env.ACR_NAMESPACE }}/${{ env.APP_NAME }}:latest
-            registry.cn-shanghai.aliyuncs.com/${{ env.ACR_NAMESPACE }}/${{ env.APP_NAME }}:${{ env.APP_VERSION }}
       - name: Build and push plus version
         uses: docker/build-push-action@v6
         env:
           DOCKERHUB_USER: ${{ secrets.DOCKERHUB_USER }}
-          ACR_NAMESPACE: ${{ secrets.ACR_NAMESPACE }}
         with:
           push: true
           context: .
@@ -76,5 +72,20 @@ jobs:
             ${{ env.DOCKERHUB_USER }}/${{ env.APP_NAME }}:plus-${{ env.APP_VERSION }}
             ghcr.io/${{ env.GITHUB_USER }}/${{ env.APP_NAME }}:plus
             ghcr.io/${{ env.GITHUB_USER }}/${{ env.APP_NAME }}:plus-${{ env.APP_VERSION }}
-            registry.cn-shanghai.aliyuncs.com/${{ env.ACR_NAMESPACE }}/${{ env.APP_NAME }}:plus
-            registry.cn-shanghai.aliyuncs.com/${{ env.ACR_NAMESPACE }}/${{ env.APP_NAME }}:plus-${{ env.APP_VERSION }}
+      # ACR rejects the attestation manifests BuildKit >= 0.32 emits (OCI empty config),
+      # so copy only the platform images there and keep provenance on the other registries.
+      - name: Copy images to ACR without attestations
+        env:
+          SRC_REPO: ghcr.io/${{ env.GITHUB_USER }}/${{ env.APP_NAME }}
+          ACR_REPO: registry.cn-shanghai.aliyuncs.com/${{ secrets.ACR_NAMESPACE }}/${{ env.APP_NAME }}
+        run: |
+          copy() {
+            local src="$SRC_REPO:$1"; shift
+            local tags=() refs
+            for t in "$@"; do tags+=(-t "$ACR_REPO:$t"); done
+            refs=$(docker buildx imagetools inspect --raw "$src" | jq -r --arg repo "$SRC_REPO" \
+              '.manifests[] | select(.annotations["vnd.docker.reference.type"] != "attestation-manifest") | "\($repo)@\(.digest)"')
+            docker buildx imagetools create "${tags[@]}" $refs
+          }
+          copy "$APP_VERSION" latest "$APP_VERSION"
+          copy "plus-$APP_VERSION" plus "plus-$APP_VERSION"
